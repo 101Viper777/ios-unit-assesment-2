@@ -6,7 +6,12 @@
 //
 
 import SwiftUI
-
+struct Bubble: Identifiable {
+    let id = UUID()
+    let color: Color
+    let points: Int
+    let position: CGPoint
+}
 struct BubbleView: View {
     let bubble: Bubble
     
@@ -24,8 +29,8 @@ struct BubbleView: View {
     }
 }
 
-struct GameViewTestPlayer_Previews: PreviewProvider {
+struct BubbleView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView(viewModel: GameViewModel(playerName: "Test Player"))
+        BubbleView(bubble: Bubble(color: .red, points: 1, position: CGPoint(x: 100, y: 100)))
     }
 }
