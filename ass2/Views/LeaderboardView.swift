@@ -26,6 +26,8 @@ struct LeaderboardView: View {
             
             Button(action: {
                 presentationMode.wrappedValue.dismiss()
+                showLeaderboard = false
+
             }) {
                 Text("Main Menu")
                     .foregroundColor(.white)

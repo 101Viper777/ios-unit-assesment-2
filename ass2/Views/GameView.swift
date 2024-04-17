@@ -1,18 +1,19 @@
 import SwiftUI
-
 struct GameView: View {
     // Game settings
     @State var gameTimeLimit: Int
     @State var maxBalloons: Int
     @Binding var showLeaderboard: Bool
+    @Binding var showGameView: Bool
 
     // Game state
     @State var playerName: String
     @Binding var playerScore: Int
     @State var score = 0
     @State var gameTimeRemaining: Int
-    @State private var gameTimer: Timer?
     private let totalGameTime: Int
+    private let maxBubbles: Int
+    @State private var gameTimer: Timer?
     @State private var lastPoppedColor: Color? = nil
 
     // Bubbles
@@ -27,17 +28,17 @@ struct GameView: View {
 
     // For tracking consecutive pops
     @State private var consecutivePopCount = 0
-    private let maxBubbles: Int
 
-    init(playerName: String, gameTimeLimit: Int = 60, maxBalloons: Int = 15, playerScore: Binding<Int>, showLeaderboard: Binding<Bool>) {
+    init(playerName: String, gameTimeLimit: Int = 60, maxBalloons: Int = 15, playerScore: Binding<Int>, showLeaderboard: Binding<Bool>, showGameView: Binding<Bool>) {
         self.playerName = playerName
         self.gameTimeLimit = gameTimeLimit
         self.maxBalloons = maxBalloons
+        self._playerScore = playerScore
+        self._showLeaderboard = showLeaderboard
+        self._showGameView = showGameView
         self.gameTimeRemaining = gameTimeLimit
         self.totalGameTime = gameTimeLimit
         self.maxBubbles = maxBalloons
-        self._playerScore = playerScore
-        self._showLeaderboard = showLeaderboard
     }
 
     var body: some View {
@@ -76,9 +77,10 @@ struct GameView: View {
                 }
             }
             .navigationBarHidden(true)
-            .navigationBarItems(trailing: NavigationLink(destination: LeaderboardView(leaderboardData: getLeaderboardData(), playerScore: playerScore, showLeaderboard: $showLeaderboard), isActive: $showLeaderboard) {
-                EmptyView()
-            })
+       
+            .sheet(isPresented: $showLeaderboard) {
+                LeaderboardView(leaderboardData: getLeaderboardData(), playerScore: playerScore, showLeaderboard: $showLeaderboard)
+            }
         }
     
 
@@ -114,11 +116,12 @@ struct GameView: View {
         bubbles.removeAll(where: { $0.id == bubble.id })
     }
     private func endGame() {
-        gameTimer?.invalidate()
-        playerScore = score
-        updateLeaderboard()
-        showLeaderboard = true
-    }
+           gameTimer?.invalidate()
+           playerScore = score
+           updateLeaderboard()
+           showLeaderboard = true
+           showGameView = false
+       }
 
     private func refreshBubbles() {
         // Remove some bubbles randomly
@@ -195,6 +198,6 @@ struct GameView: View {
 // For previewing in Xcode
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView(playerName: "Test Player", playerScore: .constant(0), showLeaderboard: .constant(false))
+        GameView(playerName: "Test Player", playerScore: .constant(0), showLeaderboard: .constant(false), showGameView: .constant(true))
     }
 }

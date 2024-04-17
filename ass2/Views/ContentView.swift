@@ -24,7 +24,7 @@ struct ContentView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
 
-                NavigationLink(destination: GameView(playerName: playerName, gameTimeLimit: gameTimeLimit, maxBalloons: maxBalloons, playerScore: $playerScore, showLeaderboard: $showLeaderboard), isActive: $showGameView) {
+                NavigationLink(destination: GameView(playerName: playerName, gameTimeLimit: gameTimeLimit, maxBalloons: maxBalloons, playerScore: $playerScore, showLeaderboard: $showLeaderboard, showGameView: $showGameView), isActive: $showGameView) {
                     Button(action: {
                         if playerName.isEmpty {
                             showAlert = true
