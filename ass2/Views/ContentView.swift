@@ -14,7 +14,7 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 Spacer()
-                Text("BubblePop Game")
+                Text("BubblePop game")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(.bottom, 20)
