@@ -1,12 +1,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var leaderboardViewModel = LeaderboardViewModel()
     @State private var playerName: String = ""
     @State private var showGameView = false
     @State private var showLeaderboardView = false
     @State private var showSettingsView = false
-    @State private var gameTimeLimit: Int = 2 // default value
-    @State private var maxBalloons: Int = 15 // default value
     @State private var showAlert: Bool = false
     @State private var playerScore = 0
     @State private var showLeaderboard = false
@@ -23,8 +22,9 @@ struct ContentView: View {
                 TextField("Enter your name", text: $playerName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
+                NavigationLink(destination: GameView(playerName: playerName, playerScore: $playerScore, showLeaderboard: $showLeaderboard, showGameView: $showGameView), isActive: $showGameView) {
 
-                NavigationLink(destination: GameView(playerName: playerName, gameTimeLimit: gameTimeLimit, maxBalloons: maxBalloons, playerScore: $playerScore, showLeaderboard: $showLeaderboard, showGameView: $showGameView), isActive: $showGameView) {
+        
                     Button(action: {
                         if playerName.isEmpty {
                             showAlert = true
@@ -49,22 +49,21 @@ struct ContentView: View {
                         dismissButton: .default(Text("OK"))
                     )
                 }
-
                 Button(action: {
-                    showLeaderboardView = true
-                }) {
-                    Text("Leaderboard")
-                        .bold()
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.gray, Color.black]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(40)
-                        .padding(.horizontal)
-                }
-                .fullScreenCover(isPresented: $showLeaderboardView) {
-                    LeaderboardView(leaderboardData: getLeaderboardData(), playerScore: playerScore, showLeaderboard: $showLeaderboard)
-                }
+                                  showLeaderboard = true
+                              }) {
+                                  Text("Leaderboard")
+                                      .bold()
+                                      .frame(minWidth: 0, maxWidth: .infinity)
+                                      .padding()
+                                      .foregroundColor(.white)
+                                      .background(LinearGradient(gradient: Gradient(colors: [Color.gray, Color.black]), startPoint: .leading, endPoint: .trailing))
+                                      .cornerRadius(40)
+                                      .padding(.horizontal)
+                              }
+                              .sheet(isPresented: $showLeaderboard) {
+                                  LeaderboardView(leaderboardViewModel: leaderboardViewModel, playerScore: playerScore, showGameView: $showGameView)
+                              }
 
                 Button(action: {
                     showSettingsView = true
@@ -79,22 +78,13 @@ struct ContentView: View {
                         .padding(.horizontal)
                 }
                 .fullScreenCover(isPresented: $showSettingsView) {
-                    SettingsView(gameTimeLimit: $gameTimeLimit, maxBalloons: $maxBalloons)
+                    SettingsView()
                 }
 
                 Spacer()
             }
             .padding()
         }
-    }
-
-    private func getLeaderboardData() -> [LeaderboardEntry] {
-        // Retrieve the leaderboard data from UserDefaults
-        if let data = UserDefaults.standard.data(forKey: "LeaderboardData"),
-           let leaderboardData = try? JSONDecoder().decode([LeaderboardEntry].self, from: data) {
-            return leaderboardData
-        }
-        return []
     }
 }
 

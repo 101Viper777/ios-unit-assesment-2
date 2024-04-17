@@ -1,18 +1,18 @@
 import SwiftUI
 
 struct LeaderboardView: View {
-    let leaderboardData: [LeaderboardEntry]
+    @ObservedObject var leaderboardViewModel: LeaderboardViewModel
     let playerScore: Int
-    @Binding var showLeaderboard: Bool
     @Environment(\.presentationMode) var presentationMode
-    
+    @Binding var showGameView: Bool
+
     var body: some View {
         VStack {
             Text("Leaderboard")
                 .font(.largeTitle)
                 .padding()
             
-            List(leaderboardData) { entry in
+            List(leaderboardViewModel.leaderboardData) { entry in
                 HStack {
                     Text(entry.name)
                     Spacer()
@@ -26,8 +26,8 @@ struct LeaderboardView: View {
             
             Button(action: {
                 presentationMode.wrappedValue.dismiss()
-                showLeaderboard = false
 
+                              showGameView = false
             }) {
                 Text("Main Menu")
                     .foregroundColor(.white)
@@ -37,10 +37,13 @@ struct LeaderboardView: View {
             }
             .padding()
         }
+        .onAppear {
+            leaderboardViewModel.getLeaderboardData()
+        }
     }
 }
-struct LeaderboardEntry: Identifiable, Codable {
-    let id: UUID
-    let name: String
-    let score: Int
+struct LeaderboardView_Previews: PreviewProvider {
+    static var previews: some View {
+        LeaderboardView(leaderboardViewModel: LeaderboardViewModel(), playerScore: 0, showGameView: .constant(false))
+    }
 }
