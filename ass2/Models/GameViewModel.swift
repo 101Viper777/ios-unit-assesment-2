@@ -11,7 +11,7 @@ class GameViewModel: ObservableObject {
     @Published var bubbles: [Bubble] = []
     @Published var score = 0
     @Published var gameTimeRemaining: Int
-    @Binding var playerScore: Int
+    @Published var playerScore = 0
     @Published var showLeaderboard = false
     @Binding var showGameView: Bool
 
@@ -30,9 +30,8 @@ class GameViewModel: ObservableObject {
         Color.black: (points: 10, probability: 5)
     ]
 
-    init(playerName: String, playerScore: Binding<Int>, showGameView: Binding<Bool>) {
+    init(playerName: String, showGameView: Binding<Bool>) {
         self.playerName = playerName
-        self._playerScore = playerScore
         self._showGameView = showGameView
         self.maxBubbles = UserDefaults.standard.integer(forKey: "MaxBalloons")
         self.totalGameTime = UserDefaults.standard.integer(forKey: "GameTimeLimit")
@@ -76,7 +75,10 @@ class GameViewModel: ObservableObject {
     private func endGame() {
         gameTimer?.invalidate()
         playerScore = score
+
         updateLeaderboard()
+        playerScore = score
+
         showLeaderboard = true
         showGameView = false
 

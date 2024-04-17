@@ -1,15 +1,9 @@
 import SwiftUI
 struct GameView: View {
-    @ObservedObject var gameViewModel: GameViewModel
+    @StateObject private var gameViewModel = GameViewModel(playerName: "Player", showGameView: .constant(true))
     @Binding var showLeaderboard: Bool
     @Binding var showGameView: Bool
-    
-    init(playerName: String, playerScore: Binding<Int>, showLeaderboard: Binding<Bool>, showGameView: Binding<Bool>) {
-        self.gameViewModel = GameViewModel(playerName: playerName, playerScore: playerScore, showGameView: showGameView)
-        self._showLeaderboard = showLeaderboard
-        self._showGameView = showGameView
-    }
-    
+
     var body: some View {
         ZStack {
             VStack {
@@ -41,9 +35,8 @@ struct GameView: View {
         }
         .navigationBarHidden(true)
         .sheet(isPresented: $gameViewModel.showLeaderboard) {
-            LeaderboardView(leaderboardViewModel: LeaderboardViewModel(), playerScore: gameViewModel.playerScore, showGameView: $showGameView)
-    
-                }
+                   LeaderboardView(leaderboardViewModel: LeaderboardViewModel(), playerScore: $gameViewModel.playerScore, showGameView: $showGameView)
+               }
     }
 }
 //

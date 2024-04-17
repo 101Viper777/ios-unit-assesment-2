@@ -2,7 +2,7 @@ import SwiftUI
 
 struct LeaderboardView: View {
     @ObservedObject var leaderboardViewModel: LeaderboardViewModel
-    let playerScore: Int
+    @Binding var playerScore: Int
     @Environment(\.presentationMode) var presentationMode
     @Binding var showGameView: Bool
 
@@ -20,7 +20,7 @@ struct LeaderboardView: View {
                 }
             }
             
-            Text("Your Score: \(playerScore)")
+            Text("Your Final Score: \(playerScore)")
                 .font(.headline)
                 .padding()
             
@@ -42,8 +42,8 @@ struct LeaderboardView: View {
         }
     }
 }
-struct LeaderboardView_Previews: PreviewProvider {
-    static var previews: some View {
-        LeaderboardView(leaderboardViewModel: LeaderboardViewModel(), playerScore: 0, showGameView: .constant(false))
-    }
-}
+//struct LeaderboardView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LeaderboardView(leaderboardViewModel: LeaderboardViewModel(), playerScore: 0, showGameView: .constant(false))
+//    }
+//}

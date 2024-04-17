@@ -22,7 +22,7 @@ struct ContentView: View {
                 TextField("Enter your name", text: $playerName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                NavigationLink(destination: GameView(playerName: playerName, playerScore: $playerScore, showLeaderboard: $showLeaderboard, showGameView: $showGameView), isActive: $showGameView) {
+                NavigationLink(destination: GameView(showLeaderboard: $showLeaderboard, showGameView: $showGameView), isActive: $showGameView) {
 
         
                     Button(action: {
@@ -62,7 +62,7 @@ struct ContentView: View {
                                       .padding(.horizontal)
                               }
                               .sheet(isPresented: $showLeaderboard) {
-                                  LeaderboardView(leaderboardViewModel: leaderboardViewModel, playerScore: playerScore, showGameView: $showGameView)
+                                  LeaderboardView(leaderboardViewModel: leaderboardViewModel, playerScore: $playerScore, showGameView: $showGameView)
                               }
 
                 Button(action: {
