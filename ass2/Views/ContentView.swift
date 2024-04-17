@@ -5,7 +5,7 @@ struct ContentView: View {
     @State private var showGameView = false
     @State private var showLeaderboardView = false
     @State private var showSettingsView = false
-    @State private var gameTimeLimit: Int = 5 // default value
+    @State private var gameTimeLimit: Int = 2 // default value
     @State private var maxBalloons: Int = 15 // default value
     @State private var showAlert: Bool = false
     @State private var playerScore = 0

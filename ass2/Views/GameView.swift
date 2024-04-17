@@ -41,12 +41,17 @@ struct GameView: View {
     }
 
     var body: some View {
-        NavigationView {
+        @Environment(\.presentationMode) var presentationMode
+
             ZStack {
                 VStack {
                     HStack {
+                       
+                        
                         Text("Score: \(score)")
+                        
                         Spacer()
+                        
                         Text("Time: \(gameTimeRemaining)")
                     }
                     .padding()
@@ -75,7 +80,7 @@ struct GameView: View {
                 EmptyView()
             })
         }
-    }
+    
 
     func startGame() {
         score = 0
