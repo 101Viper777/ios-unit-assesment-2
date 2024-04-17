@@ -31,23 +31,27 @@ struct ContentView: View {
                     )
                 ) {
                     Text("Start Game")
-                        .bold()
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(40)
-                        .padding(.horizontal)
-                }
-                .disabled(playerName.isEmpty)
-                
-                .alert(isPresented: $showAlert) {
-                    Alert(
-                        title: Text("Error"),
-                        message: Text("Please enter your name to start the game."),
-                        dismissButton: .default(Text("OK"))
-                    )
-                }
+                            .bold()
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
+                            .cornerRadius(40)
+                            .padding(.horizontal)
+                    }
+                    .disabled(playerName.isEmpty)
+                    .onTapGesture {
+                        if playerName.isEmpty {
+                            showAlert = true
+                        }
+                    }
+                    .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("Error"),
+                            message: Text("Please enter your name to start the game."),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
 
                 NavigationLink(destination: SettingsView(gameTimeLimit: $gameTimeLimit, maxBalloons: $maxBalloons)) {
                     Text("Settings")
