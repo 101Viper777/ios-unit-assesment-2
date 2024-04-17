@@ -22,7 +22,7 @@ struct ContentView: View {
                 TextField("Enter your name", text: $playerName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                NavigationLink(destination: GameView(showLeaderboard: $showLeaderboard, showGameView: $showGameView), isActive: $showGameView) {
+                NavigationLink(destination: GameView(showLeaderboard: $showLeaderboard, showGameView: $showGameView, playerName: $playerName), isActive: $showGameView) {
 
         
                     Button(action: {

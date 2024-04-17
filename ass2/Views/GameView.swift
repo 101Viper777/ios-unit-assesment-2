@@ -1,9 +1,16 @@
 import SwiftUI
 struct GameView: View {
-    @StateObject private var gameViewModel = GameViewModel(playerName: "Player", showGameView: .constant(true))
+    @StateObject private var gameViewModel: GameViewModel
     @Binding var showLeaderboard: Bool
     @Binding var showGameView: Bool
+    @Binding var playerName: String // Add this line
 
+    init(showLeaderboard: Binding<Bool>, showGameView: Binding<Bool>, playerName: Binding<String>) {
+        self._showLeaderboard = showLeaderboard
+        self._showGameView = showGameView
+        self._playerName = playerName
+        self._gameViewModel = StateObject(wrappedValue: GameViewModel(playerName: playerName.wrappedValue, showGameView: showGameView))
+    }
     var body: some View {
         ZStack {
             VStack {
