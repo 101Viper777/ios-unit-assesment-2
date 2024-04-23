@@ -29,7 +29,11 @@ class LeaderboardViewModel: ObservableObject {
         leaderboardData = Array(leaderboardData.prefix(10))
         saveLeaderboardData()
     }
-    
+    func getHighestScore() -> Int {
+        // Retrieve the highest score from the leaderboard
+        let highestScore = leaderboardData.max(by: { $0.score < $1.score })?.score ?? 0
+        return highestScore
+    }
     private func saveLeaderboardData() {
         let encodedData = try? JSONEncoder().encode(leaderboardData)
         UserDefaults.standard.set(encodedData, forKey: "LeaderboardData")

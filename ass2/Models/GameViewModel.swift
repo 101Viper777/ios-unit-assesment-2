@@ -14,14 +14,15 @@ class GameViewModel: ObservableObject {
     @Published var playerScore = 0
     @Published var showLeaderboard = false
     @Binding var showGameView: Bool
+    @Published var highestScore: Int = 0
 
     private let totalGameTime: Int
     private let maxBubbles: Int
     private var gameTimer: Timer?
     private var lastPoppedColor: Color? = nil
-    private var consecutivePopCount = 0
     private let playerName: String
-    
+    @Published var consecutivePopCount = 0
+
     private let colors = [
         Color.red: (points: 1, probability: 40),
         Color.pink: (points: 2, probability: 30),
@@ -39,13 +40,19 @@ class GameViewModel: ObservableObject {
     }
     
     func startGame() {
-        score = 0
-        gameTimeRemaining = totalGameTime
-        lastPoppedColor = nil
-        consecutivePopCount = 0
-        refreshBubbles()
-        gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            self.gameTick()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            guard let self = self else { return }
+            highestScore = LeaderboardViewModel().getHighestScore()
+
+            self.score = 0
+            self.gameTimeRemaining = self.totalGameTime
+            self.lastPoppedColor = nil
+            self.consecutivePopCount = 0
+            self.refreshBubbles()
+            
+            self.gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                self.gameTick()
+            }
         }
     }
     
@@ -57,7 +64,6 @@ class GameViewModel: ObservableObject {
             endGame()
         }
     }
-    
     func popBubble(bubble: Bubble) {
         if lastPoppedColor == bubble.color {
             consecutivePopCount += 1
@@ -68,6 +74,11 @@ class GameViewModel: ObservableObject {
         }
         lastPoppedColor = bubble.color
         bubbles.removeAll(where: { $0.id == bubble.id })
+        
+        // Pass the consecutive pop count to the GameView
+        DispatchQueue.main.async {
+            self.objectWillChange.send()
+        }
     }
     
 

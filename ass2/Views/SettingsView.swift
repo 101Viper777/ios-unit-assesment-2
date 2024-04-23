@@ -1,45 +1,50 @@
 import SwiftUI
-
 struct SettingsView: View {
     @ObservedObject var settingsViewModel = SettingsViewModel()
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        VStack {
-            Text("Settings")
-                .font(.largeTitle)
-                .padding()
-            
-            Form {
-                Section(header: Text("Game Settings")) {
-                    HStack {
-                        Text("Game Time Limit")
-                        Spacer()
-                        Text("\(Int(settingsViewModel.gameTimeLimit)) seconds")
+        NavigationView {
+            VStack {
+                Form {
+                    Section(header: Text("Game Settings")
+                                .font(.headline)
+                                .foregroundColor(.primary)) {
+                        HStack {
+                            Text("Game Time Limit")
+                            Spacer()
+                            Text("\(Int(settingsViewModel.gameTimeLimit)) seconds")
+                                .foregroundColor(.secondary)
+                        }
+                        Slider(value: $settingsViewModel.gameTimeLimit, in: 1...120)
+                            .accentColor(.orange) // Change slider color
+                        
+                        HStack {
+                            Text("Max Balloons")
+                            Spacer()
+                            Text("\(Int(settingsViewModel.maxBalloons))")
+                                .foregroundColor(.secondary)
+                        }
+                        Slider(value: $settingsViewModel.maxBalloons, in: 1...25)
+                            .accentColor(.orange) // Change slider color
                     }
-                    
-                    Slider(value: $settingsViewModel.gameTimeLimit, in: 1...120)
-                    
-                    HStack {
-                        Text("Max Balloons")
-                        Spacer()
-                        Text("\(Int(settingsViewModel.maxBalloons))")
-                    }
-                    
-                    Slider(value: $settingsViewModel.maxBalloons, in: 1...25)
                 }
+                
+                Spacer()
+                
+                Button(action: {
+                    settingsViewModel.saveSettings()
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Text("Save")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.orange) // Change button color
+                        .cornerRadius(10)
+                }
+                .padding()
             }
-            
-            Button(action: {
-                settingsViewModel.saveSettings()
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("Save")
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(10)
-            }
+            .navigationBarTitle("Settings", displayMode: .inline)
             .padding()
         }
     }

@@ -12,78 +12,89 @@ struct ContentView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
-                Spacer()
-                Text("BubblePop game")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 20)
+            ZStack {
+                // Background
+                LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.5)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .ignoresSafeArea()
 
-                TextField("Enter your name", text: $playerName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                NavigationLink(destination: GameView(showLeaderboard: $showLeaderboard, showGameView: $showGameView, playerName: $playerName), isActive: $showGameView) {
+                VStack(spacing: 20) {
+                    Spacer()
 
-        
-                    Button(action: {
-                        if playerName.isEmpty {
-                            showAlert = true
-                        } else {
-                            showGameView = true
-                        }
-                    }) {
-                        Text("Start Game")
-                            .bold()
-                            .frame(minWidth: 0, maxWidth: .infinity)
-                            .padding()
-                            .foregroundColor(.white)
-                            .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
-                            .cornerRadius(40)
-                            .padding(.horizontal)
-                    }
-                }
-                .alert(isPresented: $showAlert) {
-                    Alert(
-                        title: Text("Error"),
-                        message: Text("Please enter your name to start the game."),
-                        dismissButton: .default(Text("OK"))
-                    )
-                }
-                Button(action: {
-                                  showLeaderboard = true
-                              }) {
-                                  Text("Leaderboard")
-                                      .bold()
-                                      .frame(minWidth: 0, maxWidth: .infinity)
-                                      .padding()
-                                      .foregroundColor(.white)
-                                      .background(LinearGradient(gradient: Gradient(colors: [Color.gray, Color.black]), startPoint: .leading, endPoint: .trailing))
-                                      .cornerRadius(40)
-                                      .padding(.horizontal)
-                              }
-                              .sheet(isPresented: $showLeaderboard) {
-                                  LeaderboardView(leaderboardViewModel: leaderboardViewModel, playerScore: $playerScore, showGameView: $showGameView)
-                              }
-
-                Button(action: {
-                    showSettingsView = true
-                }) {
-                    Text("Settings")
-                        .bold()
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .padding()
+                    Text("BubblePop")
+                        .font(.system(size: 40, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.gray, Color.black]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(40)
-                        .padding(.horizontal)
-                }
-                .fullScreenCover(isPresented: $showSettingsView) {
-                    SettingsView()
-                }
 
-                Spacer()
+                    TextField("Enter your name", text: $playerName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.horizontal)
+
+                    NavigationLink(destination: GameView(showLeaderboard: $showLeaderboard, showGameView: $showGameView, playerName: $playerName), isActive: $showGameView) {
+                        Button(action: {
+                            if playerName.isEmpty {
+                                showAlert = true
+                            } else {
+                                showGameView = true
+                            }
+                        }) {
+                            Text("Start Game")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                     
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(LinearGradient(gradient: Gradient(colors: [Color.indigo, Color.purple]), startPoint: .leading, endPoint: .trailing))
+                                )
+                        }
+                    }
+
+                    Button(action: {
+                        showLeaderboard = true
+                    }) {
+                        Text("Leaderboard")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(LinearGradient(gradient: Gradient(colors: [Color.green, Color.mint]), startPoint: .leading, endPoint: .trailing))
+                            )
+                    }
+                    .sheet(isPresented: $showLeaderboard) {
+                        LeaderboardView(leaderboardViewModel: leaderboardViewModel, playerScore: $playerScore, showGameView: $showGameView)
+                    }
+
+                    Button(action: {
+                        showSettingsView = true
+                    }) {
+                        Text("Settings")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(LinearGradient(gradient: Gradient(colors: [Color.orange, Color.red]), startPoint: .leading, endPoint: .trailing))
+                            )
+                    }
+                    .fullScreenCover(isPresented: $showSettingsView) {
+                        SettingsView()
+                    }
+
+                    Spacer()
+                }
+                .padding()
             }
-            .padding()
+        }
+        .accentColor(.white) // Change the accent color for better visibility
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Error"),
+                message: Text("Please enter your name to start the game."),
+                dismissButton: .default(Text("OK"))
+            )
         }
     }
 }
