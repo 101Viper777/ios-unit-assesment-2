@@ -1,5 +1,5 @@
 //
-//  mainBubbleView.swift
+//  GameView.swift
 //  ass2
 //
 //  Created by AbdulaIziz El sabbagh on 05/4/2024.
