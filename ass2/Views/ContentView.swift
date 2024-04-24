@@ -1,7 +1,15 @@
+//
+//  ContentView.swift
+//  ass2
+//
+//  Created by AbdulaIziz El sabbagh on 09/4/2024.
+//
+
 import SwiftUI
 import AVFoundation
 
 struct ContentView: View {
+    // ViewModel and State properties
     @StateObject private var leaderboardViewModel = LeaderboardViewModel()
     @State private var playerName: String = ""
     @State private var showGameView = false
@@ -14,10 +22,11 @@ struct ContentView: View {
     @State private var audioPlayer: AVAudioPlayer?
     @State private var bubbles: [UUID] = []
     @State private var isContentViewVisible = true
+    
     var body: some View {
         NavigationView {
             ZStack {
-                // Background
+                // Background gradient
                 LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.5)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .ignoresSafeArea()
                 
@@ -29,6 +38,7 @@ struct ContentView: View {
                 VStack(spacing: 20) {
                     Spacer()
                     
+                    // Title and player name input
                     Text("BubblePop")
                         .font(.system(size: 40, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
@@ -37,6 +47,7 @@ struct ContentView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                     
+                    // Start Game button
                     NavigationLink(destination: GameView(showLeaderboard: $showLeaderboard, showGameView: $showGameView, playerName: $playerName), isActive: $showGameView) {
                         Button(action: {
                             if playerName.isEmpty {
@@ -57,6 +68,7 @@ struct ContentView: View {
                         }
                     }
                     
+                    // Leaderboard button
                     Button(action: {
                         showLeaderboard = true
                     }) {
@@ -74,6 +86,7 @@ struct ContentView: View {
                         LeaderboardView(leaderboardViewModel: leaderboardViewModel, playerScore: $playerScore, showGameView: $showGameView)
                     }
                     
+                    // Settings button
                     Button(action: {
                         showSettingsView = true
                     }) {
@@ -100,6 +113,7 @@ struct ContentView: View {
                 isContentViewVisible = true
                 playSound()
                 
+                // Bubble animation timer
                 Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
                     bubbles.append(UUID())
                     if bubbles.count > 11 {
@@ -121,14 +135,18 @@ struct ContentView: View {
             )
         }
     }
+    
+    // Functions to control background music
     func playSound() {
         if isContentViewVisible {
             audioPlayer?.play()
         }
     }
+    
     func stopSound() {
         audioPlayer?.stop()
     }
+    
     func prepareSound() {
         guard let soundURL = Bundle.main.url(forResource: "background_music", withExtension: "mp3") else {
             return
@@ -143,12 +161,7 @@ struct ContentView: View {
             print("Error loading sound: \(error.localizedDescription)")
         }
     }
-    
-    
-    
-  
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

@@ -1,46 +1,44 @@
 import SwiftUI
+
 struct SettingsView: View {
+    // Settings view model for managing settings
     @ObservedObject var settingsViewModel = SettingsViewModel()
+    // Environment variable for managing presentation mode
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
+        // Navigation view for nav related functionality
         NavigationView {
             VStack {
                 Form {
-                    Section(header: Text("Game Settings")
-                                .font(.headline)
-                                .foregroundColor(.primary)) {
+                    // Section for game settings
+                    Section(header: Text("Game Settings").font(.headline).foregroundColor(.primary)) {
+                        // Slider for setting game time limit
                         HStack {
                             Text("Game Time Limit")
                             Spacer()
-                            Text("\(Int(settingsViewModel.gameTimeLimit)) seconds")
-                                .foregroundColor(.secondary)
+                            Text("\(Int(settingsViewModel.gameTimeLimit)) seconds").foregroundColor(.secondary)
                         }
-                        Slider(value: $settingsViewModel.gameTimeLimit, in: 1...120)
-                            .accentColor(.orange) // Change slider color
+                        Slider(value: $settingsViewModel.gameTimeLimit, in: 1...120).accentColor(.orange)
                         
+                        // Slider for setting maximum balloons
                         HStack {
                             Text("Max Balloons")
                             Spacer()
-                            Text("\(Int(settingsViewModel.maxBalloons))")
-                                .foregroundColor(.secondary)
+                            Text("\(Int(settingsViewModel.maxBalloons))").foregroundColor(.secondary)
                         }
-                        Slider(value: $settingsViewModel.maxBalloons, in: 1...25)
-                            .accentColor(.orange) // Change slider color
+                        Slider(value: $settingsViewModel.maxBalloons, in: 1...25).accentColor(.orange)
                     }
                 }
                 
                 Spacer()
                 
+                // Button for saving settings
                 Button(action: {
                     settingsViewModel.saveSettings()
                     presentationMode.wrappedValue.dismiss()
                 }) {
-                    Text("Save")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.orange) // Change button color
-                        .cornerRadius(10)
+                    Text("Save").foregroundColor(.white).padding().background(Color.orange).cornerRadius(10)
                 }
                 .padding()
             }

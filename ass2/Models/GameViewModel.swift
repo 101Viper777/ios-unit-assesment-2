@@ -2,12 +2,14 @@
 //  GameViewModel.swift
 //  ass2
 //
-//  Created by AbdulaIziz El sabbagh on 18/4/2024.
+//  Created by AbdulaIziz El sabbagh on 10/4/2024.
 //
+
 import SwiftUI
 import Combine
 
 class GameViewModel: ObservableObject {
+    // Published properties to update the UI
     @Published var bubbles: [Bubble] = []
     @Published var score = 0
     @Published var gameTimeRemaining: Int
@@ -15,14 +17,16 @@ class GameViewModel: ObservableObject {
     @Published var showLeaderboard = false
     @Binding var showGameView: Bool
     @Published var highestScore: Int = 0
-
+    
+    // Constants and variables for game logic
     private let totalGameTime: Int
     private let maxBubbles: Int
     private var gameTimer: Timer?
     private var lastPoppedColor: Color? = nil
     private let playerName: String
     @Published var consecutivePopCount = 0
-
+    
+    // Color probabilities and points
     private let colors = [
         Color.red: (points: 1, probability: 40),
         Color.pink: (points: 2, probability: 30),
@@ -30,7 +34,7 @@ class GameViewModel: ObservableObject {
         Color.blue: (points: 8, probability: 10),
         Color.black: (points: 10, probability: 5)
     ]
-
+    
     init(playerName: String, showGameView: Binding<Bool>) {
         self.playerName = playerName
         self._showGameView = showGameView
@@ -39,11 +43,12 @@ class GameViewModel: ObservableObject {
         self.gameTimeRemaining = self.totalGameTime
     }
     
+    // Starts the game and initializes necessary properties
     func startGame() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self = self else { return }
-            highestScore = LeaderboardViewModel().getHighestScore()
-
+            self.highestScore = LeaderboardViewModel().getHighestScore()
+            
             self.score = 0
             self.gameTimeRemaining = self.totalGameTime
             self.lastPoppedColor = nil
@@ -56,6 +61,7 @@ class GameViewModel: ObservableObject {
         }
     }
     
+    // Updates game time and refreshes bubbles
     private func gameTick() {
         if gameTimeRemaining > 0 {
             DispatchQueue.main.async {
@@ -66,6 +72,8 @@ class GameViewModel: ObservableObject {
             endGame()
         }
     }
+    
+    // Handles popping a bubble and updates score
     func popBubble(bubble: Bubble) {
         if lastPoppedColor == bubble.color {
             consecutivePopCount += 1
@@ -83,8 +91,7 @@ class GameViewModel: ObservableObject {
         }
     }
     
-
-   
+    // Ends the game and shows leaderboard
     private func endGame() {
         DispatchQueue.main.async {
             self.gameTimer?.invalidate()
@@ -94,6 +101,8 @@ class GameViewModel: ObservableObject {
             self.showGameView = false
         }
     }
+    
+    // Refreshes bubbles on the screen
     private func refreshBubbles() {
         bubbles.removeAll(where: { _ in Bool.random() })
         
@@ -103,6 +112,7 @@ class GameViewModel: ObservableObject {
         }
     }
     
+    // Generates a random bubble with a random position and color
     private func generateRandomBubble() -> Bubble {
         var position = CGPoint(x: 0, y: 0)
         var isOverlapping = true
@@ -134,6 +144,7 @@ class GameViewModel: ObservableObject {
         return Bubble(color: .red, points: 1, position: position)
     }
     
+    // Updates the leaderboard with the player's score
     private func updateLeaderboard() {
         LeaderboardViewModel.shared.addEntry(name: playerName, score: score)
     }
