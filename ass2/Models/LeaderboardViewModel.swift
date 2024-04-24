@@ -26,7 +26,9 @@ class LeaderboardViewModel: ObservableObject {
         let newEntry = LeaderboardEntry(id: UUID(), name: name, score: score)
         leaderboardData.append(newEntry)
         leaderboardData.sort { $0.score > $1.score }
-        leaderboardData = Array(leaderboardData.prefix(10))
+        if leaderboardData.count > 10 {
+            leaderboardData = Array(leaderboardData.prefix(10))
+        }
         saveLeaderboardData()
     }
     

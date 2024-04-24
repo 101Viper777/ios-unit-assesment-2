@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 struct ContentView: View {
     @StateObject private var leaderboardViewModel = LeaderboardViewModel()
@@ -9,25 +10,33 @@ struct ContentView: View {
     @State private var showAlert: Bool = false
     @State private var playerScore = 0
     @State private var showLeaderboard = false
-
+    @State private var isMusicPlaying = true
+    @State private var audioPlayer: AVAudioPlayer?
+    @State private var bubbles: [UUID] = []
+    @State private var isContentViewVisible = true
     var body: some View {
         NavigationView {
             ZStack {
                 // Background
                 LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.5)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .ignoresSafeArea()
-
+                
+                // Bubble animations
+                ForEach(bubbles, id: \.self) { _ in
+                    mainBubbleView()
+                }
+                
                 VStack(spacing: 20) {
                     Spacer()
-
+                    
                     Text("BubblePop")
                         .font(.system(size: 40, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
-
+                    
                     TextField("Enter your name", text: $playerName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
-
+                    
                     NavigationLink(destination: GameView(showLeaderboard: $showLeaderboard, showGameView: $showGameView, playerName: $playerName), isActive: $showGameView) {
                         Button(action: {
                             if playerName.isEmpty {
@@ -41,14 +50,13 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(maxWidth: .infinity)
-                     
                                 .background(
                                     RoundedRectangle(cornerRadius: 20)
                                         .fill(LinearGradient(gradient: Gradient(colors: [Color.indigo, Color.purple]), startPoint: .leading, endPoint: .trailing))
                                 )
                         }
                     }
-
+                    
                     Button(action: {
                         showLeaderboard = true
                     }) {
@@ -65,7 +73,7 @@ struct ContentView: View {
                     .sheet(isPresented: $showLeaderboard) {
                         LeaderboardView(leaderboardViewModel: leaderboardViewModel, playerScore: $playerScore, showGameView: $showGameView)
                     }
-
+                    
                     Button(action: {
                         showSettingsView = true
                     }) {
@@ -82,13 +90,29 @@ struct ContentView: View {
                     .fullScreenCover(isPresented: $showSettingsView) {
                         SettingsView()
                     }
-
+                    
                     Spacer()
                 }
                 .padding()
             }
+            .onAppear {
+                prepareSound()
+                isContentViewVisible = true
+                playSound()
+                
+                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                    bubbles.append(UUID())
+                    if bubbles.count > 11 {
+                        bubbles.removeFirst()
+                    }
+                }
+            }
+            .onDisappear {
+                isContentViewVisible = false
+                stopSound()
+            }
         }
-        .accentColor(.white) // Change the accent color for better visibility
+        .accentColor(.white)
         .alert(isPresented: $showAlert) {
             Alert(
                 title: Text("Error"),
@@ -97,7 +121,34 @@ struct ContentView: View {
             )
         }
     }
+    func playSound() {
+        if isContentViewVisible {
+            audioPlayer?.play()
+        }
+    }
+    func stopSound() {
+        audioPlayer?.stop()
+    }
+    func prepareSound() {
+        guard let soundURL = Bundle.main.url(forResource: "background_music", withExtension: "mp3") else {
+            return
+        }
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.volume = 0.3
+
+        } catch {
+            print("Error loading sound: \(error.localizedDescription)")
+        }
+    }
+    
+    
+    
+  
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

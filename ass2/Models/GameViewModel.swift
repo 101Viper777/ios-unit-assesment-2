@@ -58,8 +58,10 @@ class GameViewModel: ObservableObject {
     
     private func gameTick() {
         if gameTimeRemaining > 0 {
-            gameTimeRemaining -= 1
-            refreshBubbles()
+            DispatchQueue.main.async {
+                self.gameTimeRemaining -= 1
+                self.refreshBubbles()
+            }
         } else {
             endGame()
         }
@@ -84,15 +86,13 @@ class GameViewModel: ObservableObject {
 
    
     private func endGame() {
-        gameTimer?.invalidate()
-        playerScore = score
-
-        updateLeaderboard()
-        playerScore = score
-
-        showLeaderboard = true
-        showGameView = false
-
+        DispatchQueue.main.async {
+            self.gameTimer?.invalidate()
+            self.playerScore = self.score
+            self.updateLeaderboard()
+            self.showLeaderboard = true
+            self.showGameView = false
+        }
     }
     private func refreshBubbles() {
         bubbles.removeAll(where: { _ in Bool.random() })

@@ -88,9 +88,7 @@ struct GameView: View {
                 Spacer()
             }
             .padding()
-            .onAppear {
-                gameViewModel.startGame()
-            }
+           
        
             if showCountdown {
                 CountdownView(showCountdown: $showCountdown)
