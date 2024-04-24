@@ -41,22 +41,22 @@ struct LeaderboardView: View {
                     }
                     .padding()
                     
+                   
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                        showGameView = false
-                    }) {
-                        Text("Main Menu")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color.blue)
-                            )
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom)
+                                         leaderboardViewModel.resetLeaderboard()
+                                     }) {
+                                         Text("Reset Leaderboard")
+                                             .font(.headline)
+                                             .foregroundColor(.white)
+                                             .padding()
+                                             .frame(maxWidth: .infinity)
+                                             .background(
+                                                 RoundedRectangle(cornerRadius: 20)
+                                                     .fill(Color.red)
+                                             )
+                                     }
+                                     .padding(.horizontal)
+                                     .padding(.bottom)
                 }
                 .navigationBarTitle("Leaderboard", displayMode: .inline)
                 .onAppear {

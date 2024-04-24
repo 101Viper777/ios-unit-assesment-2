@@ -1,12 +1,15 @@
 import SwiftUI
+import AVFoundation
 struct GameView: View {
+    
     @StateObject private var gameViewModel: GameViewModel
+    @State private var audioPlayer: AVAudioPlayer?
     @Binding var showLeaderboard: Bool
     @Binding var showGameView: Bool
     @Binding var playerName: String
     @State private var showCountdown = true
     @State private var consecutivePopCount = 0
-    
+    @State private var hasBeatenHighScore = false
     init(showLeaderboard: Binding<Bool>, showGameView: Binding<Bool>, playerName: Binding<String>) {
         self._showLeaderboard = showLeaderboard
         self._showGameView = showGameView
@@ -50,10 +53,23 @@ struct GameView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                     Spacer()
-                                       Text("High Score: \(gameViewModel.highestScore)")
-                        .font(.headline)
-                                              .fontWeight(.bold)
-                                              .foregroundColor(Color(red: 1.0, green: 0.84, blue: 0.0))
+                    VStack {
+                        ZStack {
+                            Text("High Score: \(gameViewModel.highestScore)")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color(red: 1.0, green: 0.84, blue: 0.0))
+                            
+                            if gameViewModel.score >= gameViewModel.highestScore {
+                                Image(systemName: "crown")
+                                    .foregroundColor(.yellow)
+                                    .offset(y: -20)
+                                    .onAppear {
+                                        playSound()
+                                    }
+                            }
+                        }
+                    }
                 }
                 .padding()
           
@@ -81,9 +97,28 @@ struct GameView: View {
                     .transition(.opacity)
             }
         }
+        .onAppear {
+            gameViewModel.startGame()
+            prepareSound()
+        }
         .navigationBarHidden(true)
         .sheet(isPresented: $gameViewModel.showLeaderboard) {
             LeaderboardView(leaderboardViewModel: LeaderboardViewModel(), playerScore: $gameViewModel.playerScore, showGameView: $showGameView)
+        }
+    }
+    func playSound() {
+        audioPlayer?.play()
+    }
+    func prepareSound() {
+        guard let soundURL = Bundle.main.url(forResource: "high_score_sound", withExtension: "mp3") else {
+            return
+        }
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            audioPlayer?.prepareToPlay()
+        } catch {
+            print("Error loading sound: \(error.localizedDescription)")
         }
     }
     func interpolate(from: Color, to: Color, amount: Double) -> Color {

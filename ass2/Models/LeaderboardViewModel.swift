@@ -29,6 +29,13 @@ class LeaderboardViewModel: ObservableObject {
         leaderboardData = Array(leaderboardData.prefix(10))
         saveLeaderboardData()
     }
+    
+    func resetLeaderboard() {
+           leaderboardData.removeAll()
+           saveLeaderboardData()
+       }
+    
+    
     func getHighestScore() -> Int {
         // Retrieve the highest score from the leaderboard
         let highestScore = leaderboardData.max(by: { $0.score < $1.score })?.score ?? 0

@@ -21,6 +21,7 @@
 		96F9C7BF2BD0661F00FCEA31 /* LeaderboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F9C7BE2BD0661F00FCEA31 /* LeaderboardViewModel.swift */; };
 		96F9C7C12BD0662D00FCEA31 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F9C7C02BD0662D00FCEA31 /* SettingsViewModel.swift */; };
 		96FABB252BCF97BD0047B110 /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FABB242BCF97BD0047B110 /* LeaderboardView.swift */; };
+		96FF1AB52BD8C4BD00D611D3 /* high_score_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 96FF1AB42BD8C4BD00D611D3 /* high_score_sound.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		96F9C7BE2BD0661F00FCEA31 /* LeaderboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardViewModel.swift; sourceTree = "<group>"; };
 		96F9C7C02BD0662D00FCEA31 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		96FABB242BCF97BD0047B110 /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
+		96FF1AB42BD8C4BD00D611D3 /* high_score_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = high_score_sound.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +57,7 @@
 		965697AB2BBBE4430086648D = {
 			isa = PBXGroup;
 			children = (
+				96FF1AB42BD8C4BD00D611D3 /* high_score_sound.mp3 */,
 				965697B62BBBE4430086648D /* ass2 */,
 				965697B52BBBE4430086648D /* Products */,
 			);
@@ -171,6 +174,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96FF1AB52BD8C4BD00D611D3 /* high_score_sound.mp3 in Resources */,
 				965697BF2BBBE4450086648D /* Preview Assets.xcassets in Resources */,
 				965697BC2BBBE4450086648D /* Assets.xcassets in Resources */,
 			);
